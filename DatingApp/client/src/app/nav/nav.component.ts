@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { User } from '../Models/user';
-import { AccountService } from '../Services/account.service';
+import { Observable } from 'rxjs';
+import { User } from '../models/user';
+import { AccountService } from '../services/account.service';
 
 @Component({
   selector: 'app-nav',
@@ -9,35 +10,31 @@ import { AccountService } from '../Services/account.service';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
-model: any = {};
-loggedIn: boolean = false;
+  model: any = {};
+  // loggedIn: boolean = false;
+  currentUser$: Observable<User | null>;
 
-  constructor(private AccountService: AccountService) { }
+  constructor(private accountService: AccountService) {
+    this.currentUser$ = this.accountService.currentUser$;
+  }
 
   ngOnInit(): void {
-    this.getCurrentUser();
+
+  }
+  logout() {
+    this.accountService.logout();
   }
 
-  logout(){
-    this.AccountService.logout();
-    //this.loggedIn = false;
-  }
-
-  login(){
-    this.AccountService.login(this.model)
-    .subscribe(response =>{
+  login() {
+    this.accountService.login(this.model)
+    .subscribe(response => {
       console.log(response);
-      //this.loggedIn = true;
-      console.log('Logged in successfuly')
     }, error => {
-      console.log('Failed to login', error)
+      console.log('Failed to login', error);
+    }, () => {
+      console.log('Login complete');
     });
   }
 
-  getCurrentUser(){
-    this.AccountService.currentUser$.subscribe((user:User | null) => {
-    this.loggedIn = !!user;
-    });
-  }
 
 }
