@@ -33,11 +33,6 @@ export class NavComponent implements OnInit {
     .subscribe(response => {
       this.router.navigateByUrl('/members');
       console.log(response);
-    }, error => {
-      this.toastr.error(error.errror);
-      console.log('Failed to login', error);
-    }, () => {
-      console.log('Login complete');
     });
   }
 
