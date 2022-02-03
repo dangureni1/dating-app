@@ -1,3 +1,4 @@
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -10,16 +11,12 @@ import { NavComponent } from './nav/nav.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { MemberListComponent } from './members/member-list/member-list.component';
-import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { ListComponent } from './list/list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { CoreModule } from './modules/core.module';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
-
+import { ServerErrorComponent } from './errors/server-error/server-error.component';
 
 
 @NgModule({
@@ -33,8 +30,7 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent
-
-  ],
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -52,4 +48,6 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+}
