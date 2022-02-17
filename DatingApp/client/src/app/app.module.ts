@@ -17,7 +17,12 @@ import { CoreModule } from './modules/core.module';
 import { TestErrorsComponent } from './errors/test-errors/test-errors.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
-
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { share } from 'rxjs/operators';
+import { SharedModule } from './modules/shared.module';
+import { MemberEditComponent } from './member-edit/member-edit.component';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -29,9 +34,11 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     MessagesComponent,
     TestErrorsComponent,
     NotFoundComponent,
-    ServerErrorComponent
+    ServerErrorComponent,
+    MemberEditComponent
    ],
   imports: [
+    SharedModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -43,6 +50,16 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true
     }
   ],
