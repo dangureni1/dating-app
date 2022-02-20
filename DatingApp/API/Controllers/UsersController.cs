@@ -21,13 +21,13 @@ namespace API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        private readonly IPhotoService _iphotoService;
+        private readonly IPhotoService _photoService;
 
-        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService iphotoService)
+        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService)
         {
-            this._iphotoService = iphotoService;
-            _userRepository = userRepository;
+            _photoService = photoService;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
        [HttpPut]
@@ -66,14 +66,15 @@ namespace API.Controllers
             return Ok(usersToreturn);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file){
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
+        {
             var username = User.GetUsername();
             var user = await _userRepository.GetUserByUserNameAsync(username);
 
-            var result = await _iphotoService.UploadPhotoAsync(file);
+            var result = await _photoService.UploadPhotoAsync(file);
 
-            if(result.Error != null)
+            if (result.Error != null)
             {
                 return BadRequest(result.Error.Message);
             }
@@ -84,22 +85,17 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
 
-          /*  if(user.Photos.Count == 0)
-            {
-                photo.IsMain = true;
-            }*/
             photo.IsMain = user.Photos.Count == 0;
 
             user.Photos.Add(photo);
 
-            if(await _userRepository.SaveAllAsync())
+            if (await _userRepository.SaveAllAsync())
             {
-                return CreatedAtRoute("GetUser", new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
-                //var photoDto = _mapper.Map<PhotoDto>(photo);
-                //return photoDto;                
+                return CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
+                // return _mapper.Map<PhotoDto>(photo);
             }
-            return BadRequest("Problem adding photos");
-        }     
+            return BadRequest("Problem adding Photos");
+        }
     }
 
 }
