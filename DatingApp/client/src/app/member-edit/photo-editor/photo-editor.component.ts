@@ -5,6 +5,8 @@ import { FileUploader, FileUploaderOptions } from 'ng2-file-upload';
 import { User } from 'src/app/models/user';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Photo } from 'src/app/models/photo';
+import { MembersService } from 'src/app/services/members.service';
 
 
 @Component({
@@ -20,7 +22,9 @@ export class PhotoEditorComponent implements OnInit {
   baseUrl = environment.apiUrl;
   user: User;
 
-  constructor(private accountService: AccountService) {
+  constructor(
+    private accountService: AccountService, 
+    private membersService: MembersService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user as User)
   }
 
@@ -56,4 +60,22 @@ export class PhotoEditorComponent implements OnInit {
     this.hasBaseDropZoneOver = e;
   }
 
+  setMainPhoto(photo: Photo) {
+    this.membersService.setMainPhoto(photo.id).subscribe(() => {
+      this.user.photoUrl = photo.url;
+      this.accountService.setCurrentUser(this.user);
+      this.member.photoUrl = photo.url;
+      this.member.photos.forEach(p => p.isMain = p.id === photo.id);
+    })
+  }
+
+
+  deletePhoto(photoId:number){
+    this.membersService.deletePhoto(photoId).subscribe(() => {
+      this.member.photos = this.member.photos.filter(p=>p.id != photoId);
+    })
+  }
+
 }
+
+
