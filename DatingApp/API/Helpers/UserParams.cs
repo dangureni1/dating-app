@@ -12,6 +12,10 @@ namespace API.Helpers
             get => _pageSize; // getter
             set => _pageSize = Math.Min(MaxPageSize, value); // setter
         }
-         
+        public string CurrentUserName {get; set;}
+        public string Gender {get; set;}
+
+        public int MinAge { get; set; } = 18;
+        public int MaxAge { get; set; } = 150;
     }
 }

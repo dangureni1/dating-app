@@ -25,11 +25,7 @@ export class MembersService {
       params = params.append("pageSize", itemsPerPage.toString())
     }
 
-    return this.http.get<Member[]>(`${this.baseUrl}users`,
-    {
-      observe: 'response',
-      params
-    }).pipe(
+    return this.http.get<Member[]>(`${this.baseUrl}users`,{observe: 'response', params}).pipe(
       map((res: HttpResponse<Member[]>) => {
         this.paginatedResult.result = res.body as Member[];
         if(res.headers.get('Pagination') !== null){
