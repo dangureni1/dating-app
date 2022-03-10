@@ -13,6 +13,8 @@ namespace API.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            
+            services.AddScoped<LogUserActivity>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService,PhotoService>();
             services.AddScoped<IUserRepository, UserRepository>();

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { User } from '../models/user';
 import { AccountService } from '../services/account.service';
@@ -14,16 +15,14 @@ export class HomeComponent {
   registerMode = false;
   users: any;
   
-  user: User | null;
+  currentUser$: Observable<User | null>;
 
   constructor(
     private membersService: MembersService, 
     private accountService: AccountService,
     ) 
     { 
-        this.accountService.currentUser$.pipe(take(1)).subscribe(user=>{
-        this.user = user as User;
-      });    
+      this.currentUser$ = this.accountService.currentUser$;   
     }
 
 
