@@ -35,6 +35,22 @@ namespace API.Helpers
                     opt.MapFrom(src => src.Username.ToLower());
                 }
             );
+
+            CreateMap<UserLike, LikeDto>()
+             .ForMember(
+                dest =>dest.Id, 
+                opt => 
+                {
+                    opt.MapFrom(src => src.LikedUser.Id);
+                }                       
+            )
+            .ForMember(
+                dest => dest.Username,
+                opt => {
+                    opt.MapFrom(src => src.LikedUser.UserName);
+                }
+            )
+            ;
         }
     }
 }
