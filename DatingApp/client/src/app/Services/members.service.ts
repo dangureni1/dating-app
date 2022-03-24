@@ -17,6 +17,7 @@ export class MembersService {
   baseUrl = environment.apiUrl;
   members: Member[] = [];
   memberCache = new Map<string,PaginatedResult<Member[]>>();
+  likesCache = new Map<string,PaginatedResult<Member[]>>();
   user:User;
   userParams: UserParams;
 
@@ -39,7 +40,9 @@ export class MembersService {
   }
 
   getLikes(predicate: string, pageNumber: number, pageSize: number):Observable<PaginatedResult<Partial<Member>[]>>{ 
-    //const cacheKey = Object.values({predicate, pageNumber, pageSize}).join('-');
+    const cacheKey = Object.values({predicate, pageNumber, pageSize}).join('-');
+    const response = this.likesCache.get(cacheKey);
+    if(response) return of(response);
 
     let params = this.getPaginationParams(pageNumber, pageSize);
     params = params.append('predicate', predicate);
