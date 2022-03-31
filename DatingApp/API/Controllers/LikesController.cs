@@ -5,6 +5,7 @@ using API.Entities;
 using API.Extensions;
 using API.Helpers;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
@@ -13,12 +14,15 @@ namespace API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly ILikesRepository _likesRepository;
+        private readonly IMapper _mapper;
         public LikesController(
             IUserRepository userRepository, 
-            ILikesRepository likesRepository)
+            ILikesRepository likesRepository,
+            IMapper mapper)
         {
             _likesRepository = likesRepository;
             _userRepository = userRepository;
+            _mapper = mapper;          
         }
 
         
@@ -50,12 +54,55 @@ namespace API.Controllers
             return BadRequest("Failed to like user");
         }
 
-        
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<LikeDto>>> GetUserLikes([FromQuery] LikesParams likesParams) {
             likesParams.UserId = User.GetUserId();
             var users = await _likesRepository.GetUserLikes(likesParams);
             Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
+        }
+
+        [HttpGet("get-user-like/{username}")]
+        public async Task<ActionResult<LikeDto>> GetUserLike(string username)
+        {
+            var sourceUserId = User.GetUserId();
+            var likedUser = await _userRepository.GetUserByUserNameAsync(username);
+
+            if(likedUser == null) return NotFound();
+
+            if(User.GetUsername() == username) return BadRequest("you obviously like yourself");
+
+            var userLike = await _likesRepository.GetUserLike(sourceUserId, likedUser.Id);
+            
+            if(userLike == null) return new LikeDto();
+            
+            var likeDto = new LikeDto();
+            likeDto.Id = userLike.LikedUser.Id;
+            likeDto.Username = userLike.LikedUser.UserName;
+            return Ok(likeDto);
+                     
+        }
+
+        [HttpDelete("remove-like/{username}")]
+        public async Task<ActionResult> RemoveLike(string username) {
+            var sourceUserId = User.GetUserId();
+            
+            var likedUser = await _userRepository.GetUserByUserNameAsync(username);
+
+            var sourceUser = await _likesRepository.GetUserWithLikes(sourceUserId);
+
+            if(likedUser == null) return NotFound();
+
+            if(sourceUser.UserName == username) return BadRequest("you must like yourself");
+
+            var userLike = await _likesRepository.GetUserLike(sourceUserId, likedUser.Id);
+			
+            if(userLike == null) return BadRequest("you don't like this user");
+			
+			sourceUser.LikedUsers.Remove(userLike);
+
+            if(await _userRepository.SaveAllAsync()) return Ok();
+            return BadRequest("Failed to remove like user");
         }
     }
 }

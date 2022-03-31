@@ -1,3 +1,4 @@
+import { LikeMember } from "./likeMember";
 import { Photo } from "./photo";
 
 export interface Member {
@@ -15,4 +16,7 @@ export interface Member {
   city:         string;
   country:      string;
   photos:       Photo[];
+  likedByUsers: LikeMember[];
+  
+
 }

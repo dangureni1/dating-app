@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Member } from '../models/member';
-import { Pagination } from '../models/pagination';
+import { PaginatedResult, Pagination } from '../models/pagination';
 import { MembersService } from '../services/members.service';
 
 @Component({
@@ -14,6 +14,7 @@ predicate = 'Liked';
 pageNumber = 1;
 pageSize = 5;
 pagination: Pagination
+ likesCache = new Map<string,PaginatedResult<Partial<Member>[]>>();
 
   constructor(private memberService: MembersService) { }
 
@@ -21,10 +22,21 @@ pagination: Pagination
     this.loadLikes();
   }
 
+ 
 loadLikes(){
-  this.memberService.getLikes(this.predicate, this.pageNumber, this.pageSize).subscribe(members => {
+    const values = [this.predicate, this.pageNumber, this.pageSize];
+    const cacheKey = Object.values(values).join('-');
+    const response = this.likesCache.get(cacheKey);
+    if(response) {
+      this.pagination = response.pagination
+      this.members = response.result;
+      return;
+    }
+
+    this.memberService.getLikes(this.predicate, this.pageNumber, this.pageSize).subscribe(members => {
     this.pagination = members.pagination,
     this.members = members.result
+    this.likesCache.set(cacheKey, members)
   })
 }
 

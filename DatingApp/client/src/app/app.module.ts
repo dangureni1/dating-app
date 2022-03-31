@@ -1,3 +1,4 @@
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,14 +19,14 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
-import { MemberCardComponent } from './members/member-card/member-card.component';
-import { share } from 'rxjs/operators';
 import { SharedModule } from './modules/shared.module';
 import { MemberEditComponent } from './member-edit/member-edit.component';
-import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { PhotoEditorComponent } from './member-edit/photo-editor/photo-editor.component';
 import { TextInputComponent } from './forms/text-input/text-input.component';
 import { DateInputComponent } from './forms/date-input/date-input.component';
+
+
+
 
 @NgModule({
   declarations: [
@@ -33,6 +34,8 @@ import { DateInputComponent } from './forms/date-input/date-input.component';
     NavComponent,
     HomeComponent,
     RegisterComponent,
+    TextInputComponent,
+    DateInputComponent,
     ListComponent,
     MessagesComponent,
     TestErrorsComponent,
@@ -40,8 +43,7 @@ import { DateInputComponent } from './forms/date-input/date-input.component';
     ServerErrorComponent,
     MemberEditComponent,
     PhotoEditorComponent,
-    TextInputComponent,
-    DateInputComponent
+
    ],
   imports: [
     SharedModule,
@@ -51,7 +53,8 @@ import { DateInputComponent } from './forms/date-input/date-input.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    CoreModule
+    CoreModule,
+
   ],
   providers: [
     {

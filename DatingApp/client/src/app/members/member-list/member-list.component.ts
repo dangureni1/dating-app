@@ -41,6 +41,7 @@ export class MemberListComponent implements OnInit {
     this.memberService.getMembers(this.userParams).subscribe(
       res => {
         this.members = res.result;
+      //  console.log(this.members);
         this.pagination = res.pagination;
       }
     )
@@ -57,4 +58,9 @@ export class MemberListComponent implements OnInit {
     this.loadMembers();
   }
 
+ /* getlike(member: Member){
+    this.memberService.getlike(member.username).pipe(take(1)).subscribe(() =>{
+      if(member.username != null) this.like = true;
+    });
+  }*/
 }

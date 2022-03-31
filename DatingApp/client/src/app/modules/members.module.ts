@@ -5,6 +5,7 @@ import { MemberListComponent } from '../members/member-list/member-list.componen
 import { Routes, RouterModule } from '@angular/router';
 
 import { SharedModule } from './shared.module';
+import { MemberMessagesComponent } from '../members/member-messages/member-messages.component';
 
 const routes: Routes = [
   { path: '', component: MemberListComponent, pathMatch: 'full' },
@@ -14,7 +15,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     MemberListComponent,
-    MemberDetailComponent
+    MemberDetailComponent,
+    MemberMessagesComponent
   ],
   imports: [
     CommonModule,
