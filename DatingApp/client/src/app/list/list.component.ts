@@ -36,7 +36,7 @@ loadLikes(){
     this.memberService.getLikes(this.predicate, this.pageNumber, this.pageSize).subscribe(members => {
     this.pagination = members.pagination,
     this.members = members.result
-    this.likesCache.set(cacheKey, members)
+    this.likesCache.set(cacheKey, members);
   })
 }
 

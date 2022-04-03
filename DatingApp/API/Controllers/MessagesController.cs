@@ -81,8 +81,9 @@ namespace API.Controllers
         }
 
         [HttpGet("threadPaged/{username}")]
-        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThreadPaged([FromQuery] MessageParams messageParams){
-            var currentUsername = User.GetUsername();
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThreadPaged([FromQuery] MessageParams messageParams, string username){
+            messageParams.Username = User.GetUsername();
+            messageParams.RecipientUsername = username;
             var messageThread = await _messageRepository.GetMessageThreadPaged(messageParams);
             Response.AddPaginationHeader(messageThread.CurrentPage, messageThread.PageSize, messageThread.TotalCount,messageThread.TotalPages);
             return Ok(messageThread);

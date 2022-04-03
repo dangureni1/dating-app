@@ -1,6 +1,8 @@
 import { MessageService } from './../../services/message.service';
 import { Message } from './../../models/message';
 import { Component, OnInit, Input } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Pagination } from 'src/app/models/pagination';
 
 @Component({
   selector: 'app-member-messages',
@@ -9,18 +11,36 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class MemberMessagesComponent implements OnInit {
   @Input() username: string;
-  messages: Message[];
+  @Input() messages: Message[];
+  @Input() pagination: Pagination;
+  messageContent: string;
+  pageNumber:number;
+  pageSize:number;
 
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService:MessageService) { }
 
   ngOnInit() {
-    this.loadMessages();
+  console.log(this.pagination);
   }
 
-  loadMessages() {
-    this.messageService.getMessageThread(this.username).subscribe(m => {
-      this.messages = m;
-    });
+  sendMessage(form:NgForm){
+    this.messageService.sendMessage(this.username, this.messageContent)
+    .subscribe((message) => {
+      this.messages.push(message as Message);
+      form.reset();
+    })
   }
+
+  pageChanged(event: any):void {
+    this.pageNumber = event.page;
+    this.loadMessages();
+}
+
+loadMessages() {
+  this.messageService.getMessageThreadPaged(this.pageNumber, this.pageSize,this.username).subscribe(messages => {
+    this.messages = messages.result;
+    this.pagination = messages.pagination;
+  });
+}
 
 }

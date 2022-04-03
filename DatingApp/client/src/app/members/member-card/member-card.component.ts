@@ -50,7 +50,7 @@ export class MemberCardComponent implements OnInit {
    // console.log(this.memberCard)
     //console.log(likedUser);
 
-    if(likedUser.length > 0){
+    if(likedUser?.length > 0){
      this.like = true;
       }
   }
