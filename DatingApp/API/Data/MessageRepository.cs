@@ -51,6 +51,10 @@ namespace API.Data
                 _ => query.Where(u => u.Recipient.UserName == messageParams.Username && u.DateRead == null)
             };
 
+             query = query.Where(m=>(m.Recipient.UserName == messageParams.Username && !m.RecipientDeleted) ||
+                      (m.Sender.UserName == messageParams.Username  && !m.SenderDeleted)
+                  );
+
             var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
 
             return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
@@ -67,6 +71,9 @@ namespace API.Data
             ||
             (m.Recipient.UserName == recipientUsername && m.Sender.UserName == currentUsername)
             )
+            .Where(m=>(m.Recipient.UserName == currentUsername && !m.RecipientDeleted) ||
+                      (m.Sender.UserName == currentUsername && !m.SenderDeleted)
+                  )
             .OrderBy(m => m.MessageSent)
             .ToListAsync();
 
@@ -99,6 +106,9 @@ namespace API.Data
             ||
             (m.Recipient.UserName == messageParams.RecipientUsername && m.Sender.UserName == messageParams.Username)
             )
+             .Where(m=>(m.Recipient.UserName == messageParams.Username && !m.RecipientDeleted) ||
+             (m.Sender.UserName == messageParams.Username && !m.SenderDeleted)
+                  )
             .OrderBy(m => m.MessageSent)
                .AsQueryable();
 

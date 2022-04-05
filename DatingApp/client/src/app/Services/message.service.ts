@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from '../models/message';
 import { getPaginatedResult, getPaginationParams } from './paginationHelper';
@@ -32,4 +33,7 @@ export class MessageService {
     return this.http.post(this.baseUrl + 'messages', createMessage);
   }
 
+  deleteMessage(id:number): Observable<any>{
+    return this.http.delete(`${this.baseUrl}messages/${id}`);
+  }
 }

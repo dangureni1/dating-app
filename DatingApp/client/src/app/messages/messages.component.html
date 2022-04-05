@@ -44,7 +44,8 @@
             </ng-container>
           </td>
           <td>{{message.messageSent | timeago}}</td>
-          <button class="btn btn-danger">Danger</button>
+          <button (click)="$event.stopPropagation()"  (click)="deleteMessage(message.id)" class="btn btn-danger">Delete</button>
+
         </tr>
       </tbody>
     </table>
