@@ -34,9 +34,15 @@ export class MembersService {
       });
   }
 
+
   addLike(username: string) {
     const url = `${this.baseUrl}likes/${username}`;
     return this.http.post(url, {});
+  }
+
+  removeLike(username: string) {
+    const url = `${this.baseUrl}likes/remove-like/${username}`;
+    return this.http.delete(url, {});
   }
 
   getLikes(predicate: string, pageNumber: number, pageSize: number) {
@@ -94,6 +100,25 @@ export class MembersService {
     if (foundMember) return of(foundMember);
 
     return this.http.get<Member>(`${this.baseUrl}users/${username}`)
+  }
+
+  updateMemberByUserName(userName: string) {
+    const members = [...this.memberCache.values()];
+    const allMembers = members.reduce((arr: Member[], elem: PaginatedResult<Member[]>) => arr.concat(elem.result), []);
+    const foundMember = allMembers.find(m => m.username === userName)
+
+    if (foundMember){
+      return this.http.put(`${this.baseUrl}users`, foundMember).pipe(
+        tap(_ => {
+          const index = this.members.findIndex(x => x.id === foundMember.id);
+          this.members[index] = foundMember;
+          console.log(this.members[index]);
+        })
+      )
+    } 
+    else{
+      return of(foundMember);
+    }
   }
 
   updateMember(member: Member) {

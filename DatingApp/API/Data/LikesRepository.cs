@@ -13,10 +13,13 @@ namespace API.Data
     public class LikesRepository : ILikesRepository
     {
         private readonly DataContext _context;
+
+
         public LikesRepository(DataContext context)
         {
             _context = context;
         }
+
         public async Task<UserLike> GetUserLike(int sourceUserId, int likedUserId)
         {
             //return await _context.Likes.FindAsync(sourceUserId, likedUserId);

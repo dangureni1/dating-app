@@ -44,8 +44,12 @@
             </ng-container>
           </td>
           <td>{{message.messageSent | timeago}}</td>
-          <button (click)="$event.stopPropagation()"  (click)="deleteMessage(message.id)" class="btn btn-danger">Delete</button>
-
+         
+          <td>  
+            <a class="btn btn-danger" (click)="$event.stopPropagation()" 
+            (click)="deleteMessage(message.id)">
+              <i class="fa fa-trash-o fa-lg"></i> Delete</a>
+          </td>        
         </tr>
       </tbody>
     </table>
